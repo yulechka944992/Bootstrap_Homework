@@ -1,21 +1,26 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 hostName = "localhost"  # Адрес для доступа по сети
-serverPort = 8080       # Порт для доступа по сети
+serverPort = 8080  # Порт для доступа по сети
 
 
 class MyServer(BaseHTTPRequestHandler):
     """
-        Класс, который отвечает за
-        обработку входящих запросов от клиентов
+    Класс, который отвечает за
+    обработку входящих запросов от клиентов
     """
-    def do_GET(self):
-        """ Метод для обработки входящих GET-запросов """
-        # Читаем содержимое HTML-файла
-        with open("templates/contacts.html", "r", encoding="utf-8") as file:
-            html = file.read()
 
-        self.send_response(200)
+    def do_GET(self):
+        """Метод для обработки входящих GET-запросов"""
+        if self.path == "/" or self.path == "/contacts":
+            with open("templates/contacts.html", "r", encoding="utf-8") as file:
+                html = file.read()
+            self.send_response(200)
+        else:
+            with open("templates/404.html", "r", encoding="utf-8") as file:
+                html = file.read()
+            self.send_response(404)
+
         self.send_header("Content-type", "text/html; charset=utf-8")
         self.end_headers()
         self.wfile.write(html.encode("utf-8"))
